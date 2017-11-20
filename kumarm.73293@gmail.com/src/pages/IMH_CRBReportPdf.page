@@ -1,4 +1,0 @@
-<apex:page standardController="IMH_Communication__c" 	 standardStylesheets="false" applyBodyTag="false" applyHtmlTag="false" showHeader="false" renderAs="pdf">
-    <c:IMH_CRBReport >
-    </c:IMH_CRBReport>
-</apex:page>

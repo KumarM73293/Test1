@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
-    <cacheControl>Private</cacheControl>
-    <contentType>image/gif</contentType>
-    <description>iMH Release 1 (Sprint 2) - Image for loading spinner to be displayed on action status on questionnaire page</description>
-</StaticResource>

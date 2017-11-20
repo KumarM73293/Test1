@@ -1,0 +1,519 @@
+<apex:component controller="IMH_AddChildItemsOnParentController" allowDML="true">
+    <style>
+        #OuterDiv{
+            height:100%;
+            width:100%;
+            border: none;
+            border-radius: 8px;
+        }
+        .titleDiv {
+            background-color:#1797C0;
+            color:white;
+            height:30px;
+            line-height: 30px;
+            -webkit-border-radius: 5px 5px 5px 5px;
+            border-radius: 5px 5px 5px 5px;
+            font-family: Arial,Helvetica,sans-serif;
+            font-weight: bold;
+            font-size: 120%;
+            padding-left:2%;
+        }
+        #bodyDiv {
+            padding-left: 3%;
+            padding-right: 3%;
+            
+        }
+        .lightBlue-bg {
+            background-color:#D1E9F1;
+            vertical-align: middle;
+        }
+        .Or-text{
+            color:#0099FF;
+            font-weight: bold;
+            font-size: 120%;
+        }
+        .innerInput-tables{
+            width:100%;
+            padding:20px;
+        }
+        .tableBorder{
+            background-color:#D1E9F1;
+            height:30px;
+            line-height:30px;
+            padding-left:0.7%;
+        }
+        .inputTable{
+            width:100%;
+        }
+        .sortColumn{
+            cursor:pointer;
+        }
+        .errorRowTR {
+            background-color: #FFFFCC;
+        }
+        #tablePanelDiv{
+            overflow-x: auto;
+        }
+        .unSelTR {
+            display:none;
+        } 
+        .validDis {
+          display: table-row;
+        }
+        .unSelTR {
+            display:none;
+        }
+        .inValidDis {
+            display: none;
+        }
+    </style>
+
+    <apex:attribute name="ParentRecordId" description="Parent Object record Id"
+        type="String" required="true" assignTo="{!selectedsObjectRecordId}"/>
+    <apex:attribute name="ParentTargetMarket" description="Target Market on parent"
+        type="String" required="true"  assignTo="{!targetMarket}"/>
+    <apex:attribute name="ParentTargetRegion" description="Target Region on parent"
+        type="String" required="true"  assignTo="{!targetRegion}"/>
+    <apex:attribute name="ChildSObject" description="Child Object"
+        type="String" required="true"  assignTo="{!childObject}"/>
+    <apex:attribute name="addedChilds" description="Added Childs"
+        type="String[]" required="true"  assignTo="{!addedChildsList}"/>
+    <apex:attribute name="addtionalInputRequired" description="Additional Input required"
+        type="String" required="true"  assignTo="{!captureInputOnChild}"/>
+    <apex:attribute name="TargetedJunction" description="Additional Input required"
+        type="String" required="true"  assignTo="{!childJunctionObject}"/>
+    <apex:attribute name="DefaultStartDate" description="Default Start Date"
+        type="String" required="true"  assignTo="{!inputStartDefaultDate}"/>
+    <apex:attribute name="DefaultEndDate" description="Default End Date"
+        type="String" required="true"  assignTo="{!inputEndDefaultDate}"/>
+    <body>
+        <apex:outputText >{!initiateSearch}</apex:outputText>
+        <div id="OuterDiv">
+            <br/>
+            <apex:outputPanel id="initialSearch">
+                <apex:outputPanel layout="block" id="fieldRules" rendered="{!showFieldRules}">
+                    <div id="titleDiv" class="titleDiv">
+                        <text class="titleText">{!$Label.IMH_EasyCreationPage_9}</text>
+                    </div>
+                    <br/>
+                    <div id="bodyDiv">
+                        <apex:pageBlock mode="maindetail" id="pgBlock1">
+                            <table class="table inputTable">
+                                <tr>
+                                    <td class="lightBlue-bg" width="46%" align="center">
+                                        <table class="table innerInput-tables">
+                                            <tr>
+                                                <td align="left"><b>{!$Label.IMH_EasyCreationPage_0}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left"><apex:inputText value="{!keywordParam}" style="width:75%" id="inputKey"/></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="vertical-align: middle; padding:20px;" align="center"  width="8%">
+                                        <text class="Or-text">{!$Label.IMH_EasyCreationPage_8}</text>
+                                    </td>
+                                    <td class="lightBlue-bg" width="46%">
+                                        <table class="table innerInput-tables">
+                                            <tr>
+                                                <td width="3%"></td>
+                                                <td width="28%" align="left"><b>{!$Label.IMH_EasyCreationPage_Filter1}</b></td>
+                                                <td width="28%" align="left"><b>{!$Label.IMH_EasyCreationPage_Filter2}</b></td>
+                                                <td width="28%" align="left"><b>{!$Label.IMH_EasyCreationPage_Filter3}</b></td>
+                                                <td width="7%"></td>
+                                                <td width="3%"></td>
+                                                <td width="3%"></td>
+                                            </tr>
+                                            <apex:variable var="i" value="{!1}" id="i-var"/>
+                                            <apex:repeat value="{!SearchFieldsWrapperList}" var="sf" id="outWrapList">
+                                            <tr>
+                                                <td><apex:outputText value="{!i}" id="rowIndex" rendered="false"/></td>
+                                                <td>
+                                                    <apex:selectList value="{!sf.searchField}" size="1" style="width:100%" id="sfields">
+                                                        <apex:actionSupport event="onchange" action="{!ListOfConditions}" reRender="sCondition"
+                                                                            status="RemoveStatus">
+                                                            <apex:param name="FieldRule" value="{!sf.searchField}"/>
+                                                        </apex:actionSupport>                                            
+                                                        <apex:selectOptions value="{!ListOfFields}" id="sfieldsList"/>
+                                                    </apex:selectList>
+                                                </td>
+                                                <td>
+                                                    <apex:selectList id="sCondition" value="{!sf.searchOperator}" size="1" style="width:100%">
+                                                        <apex:selectOptions value="{!FieldConditionMap[sf.searchField]}" id="sconditionsList"/>
+                                                    </apex:selectList>
+                                                </td>
+                                                <td>
+                                                    <apex:inputText value="{!sf.searchParam}" style="width:95%" id="sParam"/>
+                                                </td>
+                                                <td>
+                                                    <apex:outputText value="AND" 
+                                                                     rendered="{!If(SearchFieldsWrapperList.size>1 && SearchFieldsWrapperList.size!=i,true,false)}"
+                                                                     id="and-or"/>
+                                                </td>
+                                                <td>
+                                                    <apex:outputPanel rendered="{!IF(i=1,false,true)}" id="x-mark">
+                                                        <apex:commandLink action="{!RemoveSearchRule}" reRender="fieldRules,searchResultsPanelwrap" status="RemoveStatus" id="remove-x-mark">
+                                                            <apex:image url="{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'images/RemoveIcon-48.png')}"
+                                                                        height="12px" width="12px"/>
+                                                            <apex:param name="ruleRowIndex" value="{!i}" id="value-i"/>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!IF(i=1,true,false)}" id="clearLink">
+                                                        <apex:commandLink action="{!RemoveSearchRule}" reRender="fieldRules" status="RemoveStatus"
+                                                                          id="clearLink-mark" value="{!$Label.IMH_EasyCreationPage_FilterClear}"
+                                                                          rendered="{!If(SearchFieldsWrapperList.size>1 && SearchFieldsWrapperList.size!=i,false,true)}">
+                                                            <apex:param name="ruleRowIndex" value="{!i}" id="value-i-2"/>
+                                                        </apex:commandLink>
+                                                    </apex:outputPanel>
+                                                </td>
+                                                <td>
+                                                    <apex:actionStatus id="RemoveStatus">
+                                                        <apex:facet name="start">
+                                                            <img class="waitingImage" title="Removing..."
+                                                                 src="{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'images/LoaderRed.gif')}"/>
+                                                        </apex:facet>
+                                                    </apex:actionStatus>
+                                                </td>
+                                            </tr>
+                                            <apex:variable var="i" value="{!i+1}" id="var-i-inc"/>
+                                            </apex:repeat>
+                                            <tr>
+                                                <td>
+                                                    <a href="#" title="Add Filter">
+                                                        <apex:image url="{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'images/AddNewIcon-48.png')}"
+                                                                    onclick="AddMoreRow()" height="16px" width="16px"/>
+                                                        <apex:actionFunction name="AddMoreRow" action="{!AddSearchRules}" reRender="fieldRules" status="AddStatus"
+                                                                             id="addMoreRow"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <apex:actionStatus id="AddStatus">
+                                                        <apex:facet name="start">
+                                                            <img class="waitingImage" title="Adding..."
+                                                                 src="{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'images/LoaderGreen.gif')}"/>
+                                                        </apex:facet>
+                                                    </apex:actionStatus>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <div id="searchBtnDiv">
+                                <apex:commandButton value="{!$Label.IMH_EasyCreationPage_9}" action="{!startSearch}" 
+                                                reRender="searchResultsPanelwrap,pageMsg" 
+                                                status="searchStatus" id="searchBtn" oncomplete="resetInitialState();disableSelRecords();"/>
+                                <apex:actionStatus id="searchStatus">
+                                    <apex:facet name="start">
+                                        <img class="waitingImage" src="/img/loading.gif" title="Executing..."/>
+                                    </apex:facet>
+                                </apex:actionStatus>    
+                            </div>
+                            <apex:outputPanel id="pageMsg">
+                                <apex:pageMessages />
+                            </apex:outputPanel>
+                        </apex:pageBlock>
+                    </div>
+                </apex:outputPanel>
+            </apex:outputPanel>
+            <apex:outputPanel id="searchResultsPanelwrap">
+                <apex:outputPanel id="searchResultsPanel" rendered="{!showSearchResultsPanel}">
+                    <div id="titleDiv" class="titleDiv">
+                        <apex:outputPanel styleClass="titleText">{!$Label.IMH_EasyCreationPage_6}</apex:outputPanel>
+                        <apex:outputPanel style="padding-left:35%;font-size: 82%;">
+                            <span id="topButtonsActual">
+                                <apex:commandButton value="{!processButtonName}" action="{!processSelected}" 
+                                                rerender="pageMsg,pgBlock2" styleClass="processButton" onclick="disableButton()" 
+                                                id="process-now-btn-Top" oncomplete="resetInitialState()"/>     
+                            
+                            </span>
+                            <span id="topButtonsDummy" style="display:none">
+                                <apex:commandButton value="{!$Label.IMH_EasyCreationPage_10}" disabled="true" id="topButton1"/>
+                            </span>
+                            <apex:commandButton value="{!$Label.IMH_EasyCreationPage_7}" action="{!cancelAdding}" 
+                                                id="cancelAdd-btn-Top"/>
+                            
+                        </apex:outputPanel> 
+                    </div>
+                    <div id="bodyDiv">
+                        <apex:pageBlock mode="maindetail" id="pgBlock2">
+                            <br/><br/>
+                            <apex:outputText value="{!$Label.IMH_EasyCreationPage_3}"
+                                             rendered="{!(!allChildAdded) && childObject='IMH_Product__c'}" style="font-style: italic;"/>
+                            <apex:outputText value="{!$Label.IMH_EasyCreationPage_4}"
+                                             rendered="{!(!allChildAdded) && childObject='IMH_ChannelREF__c'}" style="font-style: italic;"/>
+                            <apex:outputText value="{!$Label.IMH_EasyCreationPage_5}"
+                                             rendered="{!allChildAdded}" style="font-style: italic;"/>
+                            <div class="tableBorder">
+                                 <apex:inputCheckbox value="{!toggleSelect}" onclick="showHideMyRecords(this);" id="myRecsBox" styleClass="myRecsBoxCls"/>
+                                <apex:outputText value="  " style="white-space: pre" id="blankOutPutText1"/>
+                               <b> <apex:outputText value="{!$Label.IMH_EasyCreationPage_11}"/></b>
+                            </div>
+                            <apex:outputPanel id="tablePanel">
+                                
+                                <div id="tablePanelDiv" style="position:relative;width:100%;">
+                                    <table id="finalTable" class="table list" style="width:100%">
+                                        <thead>
+                                            <tr class="headerRow">
+                                                <th class="headerRow" id="allCheckTD">
+                                                    <apex:inputCheckbox onclick="selectAllCheckboxes(this,'inputId')"
+                                                                        id="allCheck" styleClass="inputCheckBox"/>
+                                                </th>
+                                                <apex:variable var="j" value="{!1}" id="j-var"/>
+                                                <apex:repeat value="{!FieldLabelsMap}" var="header">
+                                                    <th class="headerRow sortColumn empty-bottom" onclick="toggleSortIcons('{!j}');">
+                                                        <apex:outputText value="{!FieldLabelsMap[header]}" rendered="{!IF(FieldLabelsMap[header] == 'BenefitEndDate__c',false,true)}"/>
+                                                        
+                                                        <img src="{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'images/ascdescGIF.gif')}"
+                                                             id="sortIcon{!j}" class="noSort sortIconStatic"/>
+                                                    </th>
+                                                    <apex:variable var="j" value="{!j+1}" id="var-j-inc"/>
+                                                </apex:repeat>
+                                                <apex:repeat value="{!inputFieldLabelsList}" var="iphead">
+                                                    <th class="headerRow">
+                                                        <apex:outputText value="{!iphead}"/>
+                                                    </th>
+                                                </apex:repeat>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <apex:variable var="k" value="{!1}" id="k-var"/>
+                                            <apex:repeat value="{!paginatedSObjectWrapList}" var="ch" id="bodyRepeat">
+                                                <tr class="{!IF(styleMap[ch.sObjectRecord.Id]==true && ch.isSelected==true && ch.isValidToDisplay==true,'dataRow errorRowTR selTR validDis',
+                                                            IF(styleMap[ch.sObjectRecord.Id]==true && ch.isSelected==true && ch.isValidToDisplay==false,'dataRow errorRowTR selTR inValidDis',
+                                                            IF(styleMap[ch.sObjectRecord.Id]==true && ch.isSelected==false && ch.isValidToDisplay==false,'dataRow errorRowTR unSelTR inValidDis',
+                                                            IF(styleMap[ch.sObjectRecord.Id]==true && ch.isSelected==false && ch.isValidToDisplay==true,'dataRow errorRowTR unSelTR validDis',
+                                                            IF(styleMap[ch.sObjectRecord.Id]==false && ch.isSelected==false && ch.isValidToDisplay==false,'dataRow unSelTR inValidDis',
+                                                            IF(styleMap[ch.sObjectRecord.Id]==false && ch.isSelected==true && ch.isValidToDisplay==true,'dataRow selTR validDis',
+                                                            IF(styleMap[ch.sObjectRecord.Id]==false && ch.isSelected==true && ch.isValidToDisplay==false,'dataRow selTR inValidDis','dataRow unSelTR validDis')))))))}"
+                                                             id="tableBodyTR{!k}">
+                                                    <td class="dataCell" id="checkBoxTD">
+                                                        <apex:inputCheckbox value="{!ch.isSelected}" id="inputId"
+                                                                            onchange="showHideDate('{!k}','{!$Component.inputId}',this,'{!$Component.myRecsBox}');"
+                                                                            styleClass="{!IF(ch.isValidToDisplay==true,'inputCheckBox validCheckbox','inputCheckBox inValidCheckbox')}"/>
+                                                    </td>
+                                                    <apex:variable var="w" value="{!0}" id="w-var"/>
+                                                    <apex:repeat value="{!ch.columnList}" var="col">
+                                                        <td class="dataCell" id="valueId{!k}{!w}">
+                                                            <apex:outputText value="{!ch.sObjectRecord[col]}" />
+                                                        </td>
+                                                        <apex:variable var="w" value="{!w+1}" id="var-w-inc"/>
+                                                    </apex:repeat>
+                                                    <apex:variable var="l" value="{!1}" id="l-var"/>
+                                                    <apex:repeat value="{!ch.inputColumnList}" var="inpCol">
+                                                        <td id="DateTD{!k}{!l}" class="{!IF(ch.isSelected=true,'dataCell inputFieldEnableTD','dataCell inputFieldDisabledTD')}">
+                                                            <apex:inputField value="{!ch.junctionsObjectRec[inpCol]}" id="dateIP" required="false"
+                                                                             styleClass="{!IF(ch.isSelected=true,'inputFieldActive inputFieldAll','inputFieldDisabled inputFieldAll')}"/>
+                                                        </td>
+                                                        <apex:variable var="l" value="{!l+1}" id="var-l-inc"/>
+                                                    </apex:repeat>
+                                                </tr>
+                                                <apex:variable var="k" value="{!k+1}" id="var-k-inc"/>
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tableBorder">
+                                    <apex:outputPanel rendered="{!If(sObjectWrapperList.size>100,true,false)}">
+                                        <apex:commandButton value="<<" rerender="searchResultsPanelwrap" action="{!beginning}" disabled="{!prev}" status="loadingStatus" id="beg-btn" oncomplete="resetInitialState();"/>
+                                        <apex:commandButton value="<" rerender="searchResultsPanelwrap" action="{!previous}" disabled="{!prev}" status="loadingStatus" id="prev-btn" oncomplete="resetInitialState();"/>
+                                        <apex:outputText id="pagination-info">{!IF(totalRecs==0,0,index+1)} - {!(index+rowCount)} of {!totalRecs}</apex:outputText>
+                                        <apex:commandButton value=">" rerender="searchResultsPanelwrap" action="{!next}" disabled="{!nxt}" status="loadingStatus" id="nxt-btn" oncomplete="resetInitialState();"/>
+                                        <apex:commandButton value=">>" rerender="searchResultsPanelwrap" action="{!end}" disabled="{!nxt}" status="loadingStatus" id="end-btn" oncomplete="resetInitialState();"/>
+                                        <apex:actionStatus id="loadingStatus">
+                                            <apex:facet name="start">
+                                                <img class="waitingImage" src="/img/loading.gif" title="Executing..."/>
+                                            </apex:facet>
+                                        </apex:actionStatus>
+                                    </apex:outputPanel>
+                                </div>
+                            </apex:outputPanel>
+                        </apex:pageBlock>
+                    </div>
+                    <div id="titleDiv" style="padding-left:40%; font-size: 100%;" class="titleDiv">
+                        <span id="bottomButtonsActual">
+                            <apex:commandButton value="{!processButtonName}" action="{!processSelected}" 
+                                                rerender="pageMsg,pgBlock2" styleClass="processButton" onclick="disableButton()" 
+                                                id="process-now-btn" oncomplete="resetInitialState()"/>     
+                            
+                        </span>
+                        
+                        <span id="bottomButtonsDummy" style="display:none">
+                            <apex:commandButton value="{!$Label.IMH_EasyCreationPage_10}" disabled="true" id="bottomButton1"/>
+                        </span>
+                        <apex:commandButton value="{!$Label.IMH_EasyCreationPage_7}" action="{!cancelAdding}" 
+                                                id="cancelAdd-btn-Bottom"/>
+                    </div>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </div>
+    </body>
+    
+    <script type="text/javascript">
+        <apex:includeScript value="{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'js/JqueryJS.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'js/jqueryTableSorterJS.js')}"/>
+        
+        $(document).ready(function() {
+            $("#finalTable").tablesorter({
+                headers:{0:{sorter:false}}
+            }); 
+            $( '.inputFieldDisabled' ).attr("disabled", "disabled");
+            $( '.inputFieldDisabledTD > .dateInput > .dateFormat' ).css("display", "none");
+            var toggleSel = '{!toggleSelect}'
+            if(toggleSel == 'false') {
+                $(".unSelTR").show();
+            }
+        });
+        function resetInitialState(){
+            $("#finalTable").tablesorter({
+                headers:{0:{sorter:false}}
+            }); 
+            $( '.inputFieldDisabled' ).attr("disabled", "disabled");
+            $( '.inputFieldDisabledTD > .dateInput > .dateFormat' ).css("display", "none");
+            $("#topButtonsDummy").hide();
+            $("#bottomButtonsDummy").hide();
+            $("#topButtonsActual").show();
+            $("#bottomButtonsActual").show();
+            document.getElementById('{!$Component.pgBlock2:myRecsBox}').checked = false;
+            document.getElementById('{!$Component.pgBlock2:allCheck}').checked = false;
+            $( '.validDis' ).show();
+        }
+        function disableButton(){
+            $("#topButtonsActual").hide();
+            $("#bottomButtonsActual").hide();
+            $("#topButtonsDummy").show();
+            $("#bottomButtonsDummy").show();
+        }
+        function showHideMyRecords(mythis){
+            if($(mythis).is(':checked')){
+                $( '.unSelTR' ).hide();
+                $( '.selTR.validDis' ).show();
+            }
+            else {
+                $( '.unSelTR' ).show();
+                $( '.validDis' ).show();
+            }
+        }
+        function selectAllCheckboxes(obj,receivedInputID){
+            if($('.myRecsBoxCls').is(':checked') && obj.checked == true){
+                alert('{!$Label.IMH_EasyCreationPage_12}');
+                $(obj).prop('checked', false);
+            }
+            else {
+                var inputCheckBox = document.getElementsByTagName("input");                  
+                for(var i=0; i<inputCheckBox.length; i++){
+                    
+                    if(inputCheckBox[i].id.indexOf(receivedInputID)!=-1) { 
+                        if(obj.checked == true){
+                          inputCheckBox[i].checked = obj.checked;
+                        }
+                        else {
+                            document.getElementById('{!$Component.pgBlock2:myRecsBox}').checked = false;
+                            if($(inputCheckBox[i]).hasClass("validCheckbox") == true){
+                              inputCheckBox[i].checked = obj.checked;
+                            }
+                            var thisTRId = $(inputCheckBox[i]).closest('tr').attr('id');
+                            if($("#"+thisTRId).hasClass('validDis') == true){
+                                $("#"+thisTRId).removeClass("selTR");
+                                $("#"+thisTRId).addClass("unSelTR");
+                                $("#"+thisTRId).css("display", "table-row");
+                            }
+                        }
+                    }
+                }
+                if(obj.checked) {
+                    $("tbody >.dataRow ").removeClass("unSelTR");
+                    $("tbody >.dataRow").addClass("selTR");
+                    $('.inputFieldAll').removeAttr('disabled');
+                    $( '.inputFieldDisabledTD > .dateInput > .dateFormat' ).css("display", "inline");
+                }
+                else {
+                    $('.inputFieldAll').attr("disabled", "disabled");
+                    $( '.inputFieldDisabledTD > .dateInput > .dateFormat' ).css("display", "none");
+                }
+            }
+        }
+        function showHideDate(count,checkId,mythis,recsChecked) {
+            var initialStatus = document.getElementById('{!$Component.pgBlock2:myRecsBox}').checked;
+            var allCheckStatus = document.getElementById('{!$Component.pgBlock2:allCheck}').checked;
+            var corrTRId = $(mythis).closest('tr').attr('id');
+            var corrTDId = $(mythis).closest('td').next().attr('id');
+            var closestTDval = $("#"+corrTDId).text();
+            var showCommentBox = false;
+            if(closestTDval == "Blue Box Line") {
+                showCommentBox = true;
+            }
+            var currentCheckstatus = document.getElementById(checkId).checked;
+            if(currentCheckstatus == false && allCheckStatus == true){
+                document.getElementById('{!$Component.pgBlock2:allCheck}').checked = false;
+            }
+            if($("#"+corrTRId).hasClass("selTR")){
+                $("#"+corrTRId).removeClass("selTR");
+                $("#"+corrTRId).addClass("unSelTR");
+                if(initialStatus == false){
+                    $("#"+corrTRId).show();    
+                }
+            }
+            else if($("#"+corrTRId).hasClass("unSelTR")){
+                $("#"+corrTRId).removeClass("unSelTR");
+                $("#"+corrTRId).addClass("selTR");
+            }
+            var noOfIps = '{!totalInputFields}'
+            for(var j=1;j<=noOfIps;j++) {
+                var dateId = 'DateTD'+count+j;
+                if($("#"+dateId+" input").prop('disabled') || $("#"+dateId+" select").prop('disabled') || $("#"+dateId+" textarea").prop('disabled')) {
+                    $( "#"+dateId+" select").removeAttr('disabled');
+                    $( "#"+dateId+" input").removeAttr('disabled');
+                    $( "#"+dateId+" textarea").removeAttr('disabled');
+                    $( "#"+dateId ).removeClass( "inputFieldDisabledTD");
+                    $( "#"+dateId ).toggleClass("inputFieldEnabledTD");
+                    $( '#'+dateId+' > .dateInput > .dateFormat' ).css("display", "inline");
+                }
+                else {
+                    $( "#"+dateId+" input").attr("disabled", "disabled");
+                    $( "#"+dateId+" select").attr("disabled", "disabled");
+                    $( "#"+dateId+" textarea").removeAttr('disabled');
+                    $( "#"+dateId ).removeClass( "inputFieldEnabledTD");
+                    $( "#"+dateId ).toggleClass("inputFieldDisabledTD");
+                    $( '#'+dateId+' > .dateInput > .dateFormat' ).css("display", "none");
+                }
+            }
+            if(initialStatus == true) {
+                $(".unSelTR").hide();
+            }
+        }
+        function toggleSortIcons(count){
+            var staticIcon = "{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'images/ascdescGIF.gif')}"
+            var noOfCols = "{!noOfFieldsOntable}";
+            for(var i=1;i<=noOfCols;i++) {
+                if(i!=count){
+                    var otherImageId = 'sortIcon'+i;
+                    document.getElementById(otherImageId).src=staticIcon;
+                }
+            }
+            var imageId = 'sortIcon'+count;
+            if($("#"+imageId).hasClass("descSort")){
+                var imageNewURL = "{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'images/ascGIF.gif')}";
+                $( "#"+imageId ).removeClass( "descSort");
+                $( "#"+imageId ).toggleClass("ascSort");
+            }
+            else {
+                var imageNewURL = "{!URLFOR($Resource.IMH_AddRemoveChildOnParents,'images/descGIF.gif')}";
+                $( "#"+imageId ).removeClass( "noSort");
+                $( "#"+imageId ).removeClass( "ascSort");
+                $( "#"+imageId ).toggleClass("descSort");
+            }
+            document.getElementById(imageId).src=imageNewURL;
+        }
+        function disableSelRecords(){
+            document.getElementById('{!$Component.pgBlock2:myRecsBox}').checked = false;
+            $( '.unSelTR' ).show();
+        }
+    </script>
+</apex:component>

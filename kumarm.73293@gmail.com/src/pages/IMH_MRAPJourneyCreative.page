@@ -1,0 +1,304 @@
+<apex:page sidebar="false" showHeader="false" standardController="IMH_CommCreative__c">
+<html>
+    <head>
+        <style>
+            body {
+                font-family: Arial,Helvetica,sans-serif;
+            }
+            #OuterContainer{
+                width:98%;
+                height:260px;
+                position: absolute;
+            }
+            #InnerContainerLarge{
+                padding-left:0.5%; 
+                width:100%;
+                
+            }
+            #ChevronStartLarge {
+                position:relative;
+                width:32%;
+                -webkit-border-radius: 35px 0px 0px 35px;
+                -moz-border-radius: 35px 0px 0px 35px;
+                border-radius: 35px 0px 0px 35px;
+            }
+            #ChevronMiddleLarge {
+                width:30.9%;
+                position:relative;
+                right:5px;
+            }
+            #ChevronEndLarge {
+                width:29.5%;
+                -webkit-border-radius: 0px 35px 35px 0px;
+                -moz-border-radius: 0px 35px 35px 0px;
+                border-radius: 0px 35px 35px 0px;
+                position:relative;
+                right:9px;
+            }
+            .largeBlocks {
+                display: inline-block;
+                height:30px;
+            }
+            .largeImage{
+                width:2%;
+            }
+            .chevronBlue{background-color:#002664;}
+            .chevronGrey{background-color:#ADAFAE;}
+            .chevronGreen{background-color:#A6D867;}
+            .largeText {
+                color: white;
+                position:absolute;
+                text-decoration:Bold;
+                font-size:150%;
+                top:15%;
+                left:40%;
+            }
+            #InnerContainerSmall{
+                padding-left:0.5%;
+                width:100%;
+                position: relative;
+                height:55px;
+                display: inline-block;
+            }
+            #ChevronStartSmall{
+                postion:relative;
+                -webkit-border-radius: 15px 0px 0px 15px;
+                -moz-border-radius: 15px 0px 0px 15px;
+                border-radius: 15px 0px 0px 15px;
+            }
+            #ChevronMiddleSmall {
+                position:relative;
+            }
+            #ChevronEndSmall {
+                position:relative;
+                -webkit-border-radius: 0px 15px 15px 0px;
+                -moz-border-radius: 0px 15px 15px 0px;
+                border-radius: 0px 15px 15px 0px;
+            }
+            .smallBlocks {
+                display: inline-block;
+                height:50px;
+            }
+            .smallImage{
+                width:2%;
+            }
+            .smallText {
+                color: white;
+                position:absolute;
+                text-decoration:Bold;
+                font-size:10px;
+            }
+            .DescribeMRAP {
+                margin-left:0.5%;
+                width:95.8%;
+                border:2px solid #a6d867;
+                -webkit-border-radius: 15px 15px 15px 15px;
+                -moz-border-radius: 15px 15px 15px 15px;
+                border-radius: 15px 15px 15px 15px;
+                
+            }
+            .DescribeMRAP table{
+                border-collapse: collapse;
+                border-spacing: 0;
+                width:100%;
+                height:100%;
+                margin:0%;
+            }
+            .tablehead {
+                font-weight: bold;
+                font-size:130%;
+            }
+            
+        </style>
+    </head>   
+    <body>
+    <div id="OuterContainer">
+        <div id="InnerContainerLarge">
+            <div id="ChevronStartLarge" class="largeBlocks chevronGrey">
+                <span class="largeText conceptText">{!$Label.iMH_ChevronText_1}</span>
+            </div>
+            <apex:image url="{!URLFOR($Resource.IMH_MRAPChevrons,'images/Chevron_Grey_Green.png')}"
+                        styleClass="largeBlocks largeImage" style="position:relative;right:1px;"/>
+            <div id="ChevronMiddleLarge" class="largeBlocks chevronGreen">
+                <span class="largeText CreativeText">{!$Label.iMH_ChevronText_5}</span>
+            </div>
+            <apex:image url="{!URLFOR($Resource.IMH_MRAPChevrons,'images/Chevron_Green_Grey.png')}"
+                        styleClass="largeBlocks largeImage" style="position:relative;right:5px;"/> 
+            <div id="ChevronEndLarge" class="largeBlocks chevronGrey">
+                <span class="largeText PreExText" style="left:28%;">{!$Label.iMH_ChevronText_9}</span>
+            </div>            
+        </div>
+        <div id="InnerContainerSmall">
+            <!-- Start of Concept Small Blocks -->
+            <div id="ChevronStartSmall" class="smallBlocks chevronGrey" style="width:9.85%;text-align: justify;">
+                <!--<div class="smallText" style="display: table;width:8.75%;height:50px;word-wrap:break-word;overflow-wrap:break-word;">
+                    <div style="display:table-cell; vertical-align:middle;">
+                       <div style="padding-left:10%">
+                           <text>{!$Label.iMH_ChevronText_2}</text>
+                       </div>
+                   </div>
+                </div>-->
+                <span class="smallText" style="left: 4.2%;top: 9%;">{!$Label.iMH_ChevronText_2_Create}</span>
+                <span class="smallText" style="left: 3.5%;top: 25%;">{!$Label.iMH_ChevronText_2_Inc} &amp;</span>
+                    <span class="smallText" style="left: 4.5%;top: 43%;">{!$Label.iMH_ChevronText_2_Add}</span>
+                <span class="smallText" style="left: 3.2%;top: 60%;">{!$Label.iMH_ChevronText_2_Benefit}</span>
+            </div>
+            <apex:image url="{!URLFOR($Resource.IMH_MRAPChevrons,'images/Chevron_Small_Grey_Grey.png')}"
+                        style="position:relative;right:1px;" styleClass="smallBlocks smallImage"/>
+            <div id="ChevronMiddleSmall" class="smallBlocks chevronGrey" style="right:5px;width:9.2%;">
+                <div class="smallText" style="display: table;width:100%;height:50px;word-wrap:break-word;overflow-wrap:break-word;">
+                    <div style="display:table-cell; vertical-align:middle;">
+                       <div style="padding-left:21%">
+                           <text>{!$Label.iMH_ChevronText_3}</text>
+                       </div>
+                   </div>
+                </div>
+            </div>
+            <apex:image url="{!URLFOR($Resource.IMH_MRAPChevrons,'images/Chevron_Small_Grey_Grey.png')}"
+                        style="position:relative;right:5px;" styleClass="smallBlocks smallImage"/>
+            <div id="ChevronMiddleSmall" class="smallBlocks chevronGrey" style="right:9px;width:9.25%;">
+                <div class="smallText" style="display: table;width:100%;height:50px;word-wrap:break-word;overflow-wrap:break-word;">
+                    <div style="display:table-cell; vertical-align:middle;">
+                       <div style="padding-left:18%">
+                           <text>{!$Label.iMH_ChevronText_4}</text>
+                       </div>
+                   </div>
+                </div>
+            </div>
+            <!-- End of Concept Small Blocks -->
+            <apex:image url="{!URLFOR($Resource.IMH_MRAPChevrons,'images/Chevron_Grey_Green_Bottom.png')}" 
+                        styleClass="smallBlocks smallImage" style="position:relative;right:10px;"/>
+            <!-- Start of Creative Small Blocks -->
+            <div id="ChevronMiddleSmall" class="smallBlocks chevronGreen" style="right:14px;width:9%;">
+                <div class="smallText" style="display: table;width:100%;height:50px;word-wrap:break-word;overflow-wrap:break-word;">
+                    <div style="display:table-cell; vertical-align:middle;">
+                       <div style="padding-left:30%">
+                           <text>{!$Label.iMH_ChevronText_7}</text>
+                       </div>
+                   </div>
+                </div>
+            </div>
+            <apex:image url="{!URLFOR($Resource.IMH_MRAPChevrons,'images/Chevron_Small_Green_Green.png')}" 
+                        styleClass="smallBlocks smallImage" style="position:relative;right:15px;"/>
+            <div id="ChevronMiddleSmall" class="smallBlocks chevronGreen"
+                    style="right:19px;width:9%;">
+                <div class="smallText" style="display: table;width:100%;height:50px;word-wrap:break-word;overflow-wrap:break-word;">
+                    <div style="display:table-cell; vertical-align:middle;">
+                       <div style="padding-left:19%">
+                           <text>{!$Label.iMH_ChevronText_6}</text>
+                       </div>
+                   </div>
+                </div>
+            </div>
+            <apex:image url="{!URLFOR($Resource.IMH_MRAPChevrons,'images/Chevron_Small_Green_Green.png')}" 
+                        styleClass="smallBlocks smallImage" style="position:relative;right:20px;"/>
+            <div id="ChevronMiddleSmall" class="smallBlocks chevronGreen" style="right:24px;width:9.4%">
+                <div class="smallText" style="display: table;width:100%;height:50px;word-wrap:break-word;overflow-wrap:break-word;">
+                    <div style="display:table-cell; vertical-align:middle;">
+                       <div style="padding-left:18%">
+                           <text>{!$Label.iMH_ChevronText_8}</text>
+                       </div>
+                   </div>
+                </div>
+            </div>
+            <!-- End of Creative Small Blocks -->
+            <apex:image url="{!URLFOR($Resource.IMH_MRAPChevrons,'images/Chevron_Green_Grey_Bottom.png')}" 
+                       styleClass="smallBlocks smallImage" style="position:relative;right:25px;"/>
+            <!-- Start of Pre-Ex Small Blocks -->
+            <div id="ChevronEndSmall" class="smallBlocks chevronGrey" style="right:29px;width:29.5%;">
+                <div class="smallText" style="display: table;width:100%;height:50px;word-wrap:break-word;overflow-wrap:break-word;">
+                    <div style="display:table-cell; vertical-align:middle;">
+                       <div style="padding-left:24%">
+                           <text>{!$Label.iMH_ChevronText_10}</text>
+                       </div>
+                   </div>
+                </div>
+            </div>
+            <!-- End of Pre-Ex Small Blocks -->
+        </div>
+        <apex:outputPanel rendered="true">
+        <div class="DescribeMRAP">
+            <table>
+                <tr>
+                    <td style="width:50%; padding-top:1%;" align="center">
+                        <text class="tablehead">{!$Label.iMH_Generic_3}</text>
+                    </td>
+                    <td style="width:50%; padding-top:1%" align="center">
+                        <text class="tablehead">{!$Label.iMH_Generic_4}</text>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:50%" valign="top">
+                        <ul>
+                            <li style="padding-bottom:0.5%">
+                                    <text>{!$Label.iMH_CreativeAll_Guidance_Mark_1}</text>
+                            </li>
+                            <li style="padding-bottom:0.5%">
+                                <text>{!$Label.iMH_CreativeAll_Guidance_Mark_2}</text>
+                            </li>
+                            <li style="padding-bottom:0.5%">
+                                <text>{!$Label.iMH_CreativeAll_Guidance_Mark_3}</text>
+                            </li>
+                            <li style="padding-bottom:0.5%">
+                                <text>{!$Label.iMH_CreativeAll_Guidance_Mark_4}</text>
+                            </li>
+                            <li style="padding-bottom:0.5%">
+                                <text>{!$Label.iMH_CreativeAll_Guidance_Mark_5}</text>
+                            </li>
+                            <li>
+                                <text>{!$Label.iMH_CreativeAll_Guidance_Mark_6}</text>
+                            </li>
+                        </ul>
+                    </td>
+                    <td style="width:50%" valign="top">
+                        <ul>
+                            <li style="padding-bottom:0.5%">
+                                <text>{!$Label.iMH_CreativeAll_Guidance_Rev_1}</text>
+                            </li>
+                            <li style="padding-bottom:0.5%">
+                                <text>{!$Label.iMH_CreativeAll_Guidance_Rev_3}</text>
+                                <ul>
+                                    <li>
+                                        <text><b>{!$Label.iMH_CreativeAll_Guidance_Rev_3_Heading1}</b> {!$Label.iMH_CreativeAll_Guidance_Rev_3_Body1}</text>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li>
+                                        <text><b>{!$Label.iMH_CreativeAll_Guidance_Rev_3_Heading2}</b> {!$Label.iMH_CreativeAll_Guidance_Rev_3_Body2}</text>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li>
+                                         <text><b>{!$Label.iMH_CreativeAll_Guidance_Rev_3_Heading3}</b> {!$Label.iMH_CreativeAll_Guidance_Rev_3_Body3}</text>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li>
+                                        <text><b>{!$Label.iMH_CreativeAll_Guidance_Rev_3_Heading4}</b> {!$Label.iMH_CreativeAll_Guidance_Rev_3_Body4}</text>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li>
+                                        <text><b>{!$Label.iMH_CreativeAll_Guidance_Rev_3_Heading5}</b> {!$Label.iMH_CreativeAll_Guidance_Rev_3_Body5}</text>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li>
+                                        <text><b>{!$Label.iMH_CreativeAll_Guidance_Rev_3_Heading6}</b> {!$Label.iMH_CreativeAll_Guidance_Rev_3_Body6}</text>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li style="padding-bottom:0.5%">
+                                <text>{!$Label.iMH_CreativeAll_Guidance_Rev_4}</text>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </apex:outputPanel>
+    </div>
+    </body>
+    
+</html>
+</apex:page>

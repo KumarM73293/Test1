@@ -1,0 +1,344 @@
+<apex:component controller="IMH_CRBReport">
+    <html>
+        <head>
+            <style>
+                .titleDiv {
+                background-color:#1797C0;
+                color:white;
+                height:40px;
+                line-height: 40px;
+                font-weight: bold;
+                font-size: 120%;
+                padding-left:2%;
+                }
+                
+                .paratitleDiv {
+                background-color:#1797C0;
+                color:white;
+                height:20px;
+                line-height: 20px;
+                font-weight: bold;
+                font-size: 120%;
+                padding-left:2%;
+                }
+                
+                .channelprodstyle {
+                width: 100%;
+                border-top-width: 0px;
+                border-bottom-width: 0px;
+                border-left-width: 0px;
+                border-right-width: 0px;
+                border-color: #0066ff;
+                }
+                
+                
+                body{
+                   font-family: Arial Unicode MS;
+                }
+                
+            </style>
+        </head>
+        <body>
+            <apex:form >
+              <table border="1" width="100%" >
+                  <tr>
+                      <td style="width:60%;">
+                 <div id="titleDiv" style="padding-left:0%; font-size: 100%;background-color:#1797C0;
+                                          color:white;
+                                          height:40px;
+                                          line-height: 40px;
+                                          font-weight: bold;
+                                          font-size: 120%;
+                                          padding-left:2%;font-family: Arial Unicode MS;" class="titleDiv">
+                    <div id="titleDiv" class="titleDiv">
+                        <text class="titleText">{!$Label.IMH_CRBHeading}</text>
+                    </div>
+                </div> 
+                          </td>
+                      <td style="width:40%;"><div id="subTittleDiv" style="padding-left:0%; background-color:#1797C0;
+                                                                             color:white;
+                                                                             height:40px;
+                                                                             line-height:40px;
+                                                                             font-weight: bold;
+                                                                             font-size: 120%;
+                                                                             font-family: Arial Unicode MS;
+                                                                             padding-left:2%;" class="titleDiv">
+                            <div id="titleDiv" class="titleDiv">
+                                <apex:outputText value="{!communication.Owner.name}"/> 
+                            </div>
+                            </div>
+                        </td>
+                      </tr>
+                </table>  
+                
+                <table border="1" width="100%" >
+                    <tr>
+                        <td >
+                            <div id="subTittleDiv" style="padding-left:0%; font-size: 100%;background-color:#1797C0;
+                                                          color:white;
+                                                          height:40px;
+                                                          line-height: 40px;
+                                                          font-family: Arial Unicode MS;
+                                                          font-weight: bold;
+                                                          font-size: 120%;
+                                                          padding-left:2%;" styleclass="titleDiv">
+                                <div id="titleDiv" class="titleDiv">
+                                    <apex:outputText value="{!communication.Name}" /> 
+                                </div>
+                            </div>
+                        </td>
+                        
+                        
+                    </tr>
+                </table>   
+                
+                <!--<apex:pageBlockSection title="" columns="2">-->
+                <!--<apex:pageBlockTable value="{!lchannelInfo}" var="channel">-->
+                
+                
+                <!-- </apex:pageBlockSection>-->
+                <table  border = "1" width="100%" style="font-family: Arial Unicode MS;">
+                    <tr>
+                        <td>
+                            
+                            
+                            <div id="paratitleDiv1" class="paratitleDiv" style="padding-left:0%; font-size: 100%; background-color:#1797C0;
+                                                                                color:white;
+                                                                                height:20px;
+                                                                                line-height: 20px;
+                                                                                font-weight: bold;
+                                                                                font-size: 120%;
+                                                                               
+                                                                                padding-left:2%;">
+                                <text><h><b>{!$Label.IMH_CRBCommunicationHeading}</b></h></text> 
+                            </div>   
+                            <table width="100%" border = "1"  >
+                                <apex:repeat value="{!FieldLablesMap}" var="fieldvalue">
+                                    <tr class="headerRow"  style="page-break-inside:avoid;font-family">
+                                        
+                                        <!--<apex:outputPanel rendered="{!If(FieldLablesMap[fieldvalue] == 'Target Audience Size',true,false)}"> -->
+                                        <td><apex:outputText value="{!FieldLablesMap[fieldvalue]}"/></td>
+                                        <td>
+                                            <apex:outputText value="{!communication[FieldLabelAPIMap[fieldvalue]]}" rendered="{!!mcommunicationDate[FieldLabelAPIMap[fieldvalue]]}"/>
+                                            <!--<apex:outputText value="{0,date,dateformat}" rendered="{!mcommunicationDate[FieldLabelAPIMap[fieldvalue]]}"> 
+                                                <apex:param value="{!communication[FieldLabelAPIMap[fieldvalue]]}"/>
+                                            </apex:outputText>-->
+                                            <apex:outputField value="{!communication[FieldLabelAPIMap[fieldvalue]]}" rendered="{!mcommunicationDate[FieldLabelAPIMap[fieldvalue]]}"/>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                
+                    <table border="1 " width="100%" style=" page-break-inside:avoid;font-family: Arial Unicode MS;">
+                    <tr>
+                        <td>
+                            <div >
+                                <div id="paratitleDiv2" class="paratitleDiv" style="padding-left:0%; font-size: 100%; background-color:#1797C0;
+                                                                                    color:white;
+                                                                                    height:20px;
+                                                                                    line-height: 20px;
+                                                                                    
+                                                                                    font-weight: bold;
+                                                                                    font-size: 120%;
+                                                                                    padding-left:2%;">
+                                    <text><b>{!$Label.IMH_CommDescriptionHeading}</b></text> 
+                                </div>
+                                <apex:outputText value="{!communication.Description__c}"/>	
+                            </div>
+                        </td>
+                    </tr>     
+                </table>
+                <!-- <apex:outputPanel rendered="{!If(lchannelInfo.size > 0 || !isProducts,true,false)}">
+                 <div style="page-break-after: always">
+                </div>
+                </apex:outputPanel>-->
+                <table border = "0" style = "width:100%;" class="channelprodstyle">
+                   
+                    <td style="width:40%;page-break-inside:avoid;" title="Channel Information">
+                    <!--<table border = "0" width="100%;">
+                       <tr>
+                           <td>-->
+                        <apex:outputPanel rendered="{!If(lchannelInfo.size > 0,true,false)}">
+                        <table border="1" style="width:100%;">
+                            <tr>
+                                <td>
+                           <div id="paratitleDiv1" class="paratitleDiv" style="padding-left:0%; font-size: 100%; background-color:#1797C0;
+                                                                            color:white;
+                                                                            height:20px;
+                                                                            line-height: 20px;
+                                                                            font-weight: bold;
+                                                                            font-size: 120%;
+                                                                            font-family: Arial Unicode MS;
+                                                                            padding-left:2%;">
+                            <text>{!$Label.IMH_ChannelInforHeading}</text> 
+                        </div> 
+                                    </td>
+                                </tr>
+                        </table>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!If(lchannelInfo.size > 0,true,false)}">
+                            <table title = "Channel Information" border = "1" style = "width:100%;">
+                                <thead>
+                                    <tr>
+                                        <apex:repeat value="{!FieldLablesChannelMap}" var="fieldvalue">
+                                            
+                                            <th style ="width:154px;height:40px">
+                                                <apex:outputText value="{!FieldLablesChannelMap[fieldvalue]}" style="font-family: Arial Unicode MS;"/>
+                                            </th>
+                                            
+                                        </apex:repeat>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <apex:repeat value="{!lchannelInfo}" var="channel">
+                                        <tr style="font-family: Arial Unicode MS;">
+                                            <apex:repeat value="{!FieldLabelChannelAPIMap}" var="col">
+                                                <td  class="textfont">
+                                                    <apex:outputText value="{!channel[FieldLabelChannelAPIMap[col]]}" rendered="{!!mChannelDate[FieldLabelChannelAPIMap[col]]}"/>
+                                                    <!--<apex:outputText value="{0,date,dd'/'MM'/'yyyy}" rendered="{!mChannelDate[FieldLabelChannelAPIMap[col]]}">
+                                                        <apex:param value="{!channel[FieldLabelChannelAPIMap[col]]}"/>
+                                                    </apex:outputText>-->
+                                                    <apex:outputField value="{!channel[FieldLabelChannelAPIMap[col]]}" rendered="{!mChannelDate[FieldLabelChannelAPIMap[col]]}"/>
+                                                </td>
+                                            </apex:repeat>
+                                        </tr>
+                                    </apex:repeat>
+                                </tbody>
+                            </table>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!If(lchannelInfo.size == 0,true,false)}">
+                            <div style="height:100px"></div>
+                        </apex:outputPanel>
+                      <!-- </td> 
+                    </tr>
+                    </table>-->
+                    </td> 
+                    <td style="width:60%;page-break-inside:avoid;" title="Product Information">
+                         <apex:outputPanel rendered="{!isProducts}">
+                        <table border="1" width="100%;" style="font-family: Arial Unicode MS;">
+                            <tr>
+                                <td>
+                             <div id="paratitleDiv2" class="paratitleDiv" style="padding-left:0%; font-size: 100%; background-color:#1797C0;
+                                                                            color:white;
+                                                                            height:20px;
+                                                                            line-height: 20px;
+                                                                            font-weight: bold;
+                                                                            font-size: 120%;
+                                                                            padding-left:2%;">
+                            <text>{!$Label.IMH_ProductHeading}</text> 
+                        </div>
+                                </td>
+                            </tr>
+                        </table>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!isProducts}">
+                            <!-- <table border = "1">-->
+                            <table border = "1" title = "Product Information" style = "width:100%;font-family: Arial Unicode MS;">
+                                <thead>
+                                    <tr class = "headerRow">
+                                        <th style ="width:154px;height:50px">{!$Label.IMH_ProdGrpHeading}</th>
+                                        <th>{!$Label.IMH_ProductsHeading}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <apex:repeat value="{!mproductsgroupprods}" var="prods">
+                                        <tr>
+                                            <td class="textfont" style="text-align:center">
+                                                     <apex:outputText value="{!prods}" rendered="{!if(prods != NULL,true,false)}"/>
+                                                     <apex:outputText value="{!$Label.IMH_CRBProductNA}" rendered="{!if(prods == NULL,true,false)}" />
+                                            </td>
+                                            
+                                            <td class="textfont">
+                                                <apex:outputText value="{!$Label.IMH_ALLProducts}" rendered="{!IF(mallproductscheck[prods],true,false)}" />
+                                                <apex:outputText value="{!mproductsgroupprods[prods]}" rendered="{!IF(!mallproductscheck[prods] && prods == 'N/A' && !isOnlyNA,true,false)}" />
+												<apex:outputText value="{!mproductsgroupprods[prods]}" rendered="{!IF(!mallproductscheck[prods] && prods != 'N/A' ,true,false)}" />
+                                                <apex:outputText value="{!$Label.IMH_CRBProductNA}" rendered="{!IF(mproductsgroupprods[prods][0]=='* N/A' && isOnlyNA ,true,false)}" />
+                                            </td>
+                                        </tr>
+                                    </apex:repeat>
+                                </tbody>
+                            </table>
+                        </apex:outputPanel>
+                        
+                        <!-- </table>-->
+                        <apex:outputPanel rendered="{!!isProducts}">
+                            <div style="height:100px"></div>
+                        </apex:outputPanel>
+                        <!--</td>
+                            </tr>
+                        </table>-->
+                       
+                    </td>
+                    	
+                </table>
+                <apex:outputPanel rendered="{!IF(lincentives.size>0,true,false)}">
+                <div style="page-break-after: always">
+                </div>
+                </apex:outputPanel>
+                <!--Incentive Information-->
+           <apex:outputPanel rendered="{!IF(lincentives.size>0,true,false)}">  
+                <apex:repeat value="{!lincentives}" var="incentive">
+                    <div style="page-break-before: always">
+                        <table  border = "1" width="100%"  style="font-family: Arial Unicode MS;">
+                            <tr>
+                                <td>
+                                    <div id="paratitleDiv3" class="paratitleDiv" style="padding-left:0%; font-size: 100%; background-color:#1797C0;
+                                                                                        color:white;
+                                                                                        height:20px;
+                                                                                        line-height: 20px;
+                                                                                        font-weight: bold;
+                                                                                        font-size: 120%;
+                                                                                        padding-left:2%;">
+                                        <text><b>{!$Label.IMH_IncentiveInfoHeading}</b></text> 
+                                    </div>
+                                    <table border = "1" width = "100%" style="font-family: Arial Unicode MS;">
+                                        <thead>
+                                            <apex:repeat value="{!FieldLablesIncentiveMap}" var="fieldvalue">
+                                                <tr class="headerRow">
+                                                    <td><apex:outputText value="{!FieldLablesIncentiveMap[fieldvalue]}"/></td>
+                                                    <td>
+                                                        <apex:outputText value="{!incentive[FieldLabelIncentiveAPIMap[fieldvalue]]}" rendered="{!!mincentiveDate[FieldLabelIncentiveAPIMap[fieldvalue]]}"/>
+                                                        <!--<apex:outputText value="{0,date,dd'/'MM'/'yyyy}" rendered="{!mincentiveDate[FieldLabelIncentiveAPIMap[fieldvalue]]}">
+                                                            <apex:param value="{!incentive[FieldLabelIncentiveAPIMap[fieldvalue]]}"/>
+                                                        </apex:outputText>-->
+                                                        <apex:outputField value="{!incentive[FieldLabelIncentiveAPIMap[fieldvalue]]}" rendered="{!mincentiveDate[FieldLabelIncentiveAPIMap[fieldvalue]]}"/>
+                                                    </td>
+                                                </tr>
+                                            </apex:repeat>
+                                        </thead>
+                                        <!--</tbody> -->
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <apex:repeat value="{!FieldOtherLablesIncentiveMap}" var="fvalue">
+                            <table border="1 " width="100%" style="font-family: Arial Unicode MS;">
+                                <tr>
+                                    <td>
+                                        <div id="paratitleDiv4" class="paratitleDiv" style="padding-left:0%; font-size: 100%; background-color:#1797C0;
+                                                                                            color:white;
+                                                                                            height:20px;
+                                                                                            line-height: 20px;
+                                                                                            
+                                                                                            font-weight: bold;
+                                                                                            font-size: 120%;
+                                                                                            padding-left:2%;">
+                                            <text><b>{!FieldOtherLablesIncentiveMap[fvalue]}</b></text>
+                                        </div>
+                                        <apex:outputText value="{!incentive[FieldOtherLabelIncentiveAPIMap[fvalue]]}"></apex:outputText>
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:repeat>
+                    </div>
+                </apex:repeat>
+                </apex:outputPanel>
+            </apex:form>
+        </body>
+    </html>
+    
+</apex:component>
